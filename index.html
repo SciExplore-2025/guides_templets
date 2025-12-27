@@ -1,33 +1,928 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>پایگاه‌ها و منابع اطلاعاتی علوم اجتماعی</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>علوم اجتماعی - منابع و پایگاه‌های اطلاعاتی</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.003/font.css">
     <style>
-      body {
-        font-family: 'Vazirmatn', sans-serif;
-        background-color: #f9f9fb;
-      }
-      .custom-scroll-mt {
-        scroll-margin-top: 100px;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-dark: #2c3e50;
+            --primary: #34495e;
+            --primary-light: #4a6572;
+            --secondary: #E17A41;
+            --secondary-light: #FCB42D;
+            --accent: #7f8c8d;
+            --light-gray: #f8f9fa;
+            --medium-gray: #ecf0f1;
+            --dark-gray: #95a5a6;
+            --text-dark: #2c3e50;
+            --text-medium: #34495e;
+            --text-light: #7f8c8d;
+            --white: #ffffff;
+            --card-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-medium);
+            line-height: 1.7;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* استایل هدر و فهرست مطالب */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.03"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
+            background-size: cover;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+        }
+        
+        .page-subtitle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .meta-info {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .meta-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .view-count {
+            background-color: rgba(225, 122, 65, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: var(--white);
+        }
+        
+        /* فهرست مطالب */
+        .toc-container {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            border-right: 4px solid var(--secondary);
+        }
+        
+        .toc-title {
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(225, 122, 65, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .toc-title i {
+            color: var(--secondary);
+        }
+        
+        .toc-list {
+            list-style-type: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+        
+        .toc-item {
+            background: var(--light-gray);
+            padding: 14px;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-right: 3px solid transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .toc-item:hover {
+            background: rgba(225, 122, 65, 0.08);
+            transform: translateX(-3px);
+            border-right-color: var(--secondary);
+        }
+        
+        .toc-item.active {
+            background: rgba(225, 122, 65, 0.12);
+            border-right-color: var(--secondary);
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .toc-number {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: var(--white);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            margin-left: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            scroll-margin-top: 30px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            padding: 20px 25px 15px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: var(--white);
+            position: relative;
+        }
+        
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), transparent);
+        }
+        
+        .card-header h2 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .card-header h2 i {
+            font-size: 1.1rem;
+            color: var(--secondary-light);
+        }
+        
+        .card-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-text {
+            margin-bottom: 20px;
+            color: var(--text-medium);
+            font-size: 0.95rem;
+            flex-grow: 1;
+            line-height: 1.7;
+        }
+        
+        .highlight {
+            background-color: rgba(225, 122, 65, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            border-right: 3px solid var(--secondary);
+        }
+        
+        .subfields-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        .subfield-item {
+            background: var(--light-gray);
+            padding: 14px;
+            border-radius: 8px;
+            transition: var(--transition);
+            border-right: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .subfield-item:hover {
+            background: rgba(225, 122, 65, 0.08);
+            transform: translateY(-2px);
+            border-right-color: var(--secondary);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+        }
+        
+        .subfield-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .subfield-name {
+            font-weight: 600;
+            color: var(--primary-dark);
+            line-height: 1.4;
+            font-size: 0.95rem;
+        }
+        
+        .link-list {
+            list-style-type: none;
+            margin: 15px 0;
+        }
+        
+        .link-list li {
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            border-right: 3px solid transparent;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .link-list li:hover {
+            background-color: rgba(225, 122, 65, 0.08);
+            border-right-color: var(--secondary);
+            transform: translateX(-3px);
+        }
+        
+        .link-list li i {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        
+        .link-list li a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 500;
+            flex-grow: 1;
+            font-size: 0.95rem;
+        }
+        
+        .link-list li a:hover {
+            color: var(--secondary);
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #d46a35, #f0a71c);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(225, 122, 65, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--primary-dark);
+            border: 1px solid var(--dark-gray);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(225, 122, 65, 0.08);
+            transform: translateY(-2px);
+            border-color: var(--secondary);
+        }
+        
+        .publisher-logos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .publisher-logo {
+            width: 130px;
+            height: 70px;
+            background: var(--white);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            transition: var(--transition);
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+        }
+        
+        .publisher-logo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--secondary);
+        }
+        
+        .publisher-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: grayscale(30%);
+        }
+        
+        .section-title {
+            font-size: 1.6rem;
+            color: var(--primary-dark);
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(225, 122, 65, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+        }
+        
+        .section-title i {
+            color: var(--secondary);
+        }
+        
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: var(--white);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+            
+            .toc-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 1.7rem;
+            }
+            
+            .page-subtitle {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .subfields-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .intro-text {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            line-height: 1.8;
+            border-right: 4px solid var(--secondary);
+        }
+        
+        .intro-text h1 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .intro-text p {
+            margin-bottom: 15px;
+            color: var(--text-medium);
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--medium-gray);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
+    <!-- فونت Vazirmatn باید قبل از استایل‌ها لود بشه -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.003/font.css">
 </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<body>
+    
+    <!-- هدر صفحه -->
+    <header class="page-header">
+        <h1 class="page-title"><i class="fas fa-book-open"></i> پایگاه‌ها و منابع اطلاعاتی علوم اجتماعی</h1>
+        <p>مرجع جامع دسترسی به پایگاه‌های علمی، ناشران معتبر و منابع پژوهشی در حوزه علوم اجتماعی</p>
+        
+        <div class="page-subtitle">
+            <div class="meta-info">
+                <span><i class="fas fa-user-edit"></i> یابش ادمین</span>
+                <span><i class="fas fa-calendar-alt"></i> ۱۴۰۴-۱۰-۰۶</span>
+                <span class="view-count"><i class="fas fa-eye"></i> بازدید ۲۰</span>
+            </div>
+            <div class="meta-info">
+                <span><i class="fas fa-clock"></i> زمان مطالعه: ۸ دقیقه</span>
+                <span><i class="fas fa-tags"></i> علوم اجتماعی، پژوهش، منابع علمی</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- فهرست مطالب -->
+    <div class="toc-container">
+        <h2 class="toc-title"><i class="fas fa-list-ol"></i> آنچه در این مقاله می‌خوانید:</h2>
+        <ul class="toc-list" id="tocList">
+            <li class="toc-item" data-target="intro">
+                <span class="toc-number">۱</span>
+                رشته علوم اجتماعی چیست؟
+            </li>
+            <li class="toc-item" data-target="research-background">
+                <span class="toc-number">۲</span>
+                برای پیشینه پژوهش از چه پایگاه‌هایی استفاده کنم؟
+            </li>
+            <li class="toc-item" data-target="abstract-databases">
+                <span class="toc-number">۳</span>
+                پایگاه‌های چکیده‌نامه‌ای علوم اجتماعی
+            </li>
+            <li class="toc-item" data-target="fulltext-databases">
+                <span class="toc-number">۴</span>
+                پایگاه‌های تخصصی تمام متن
+            </li>
+            <li class="toc-item" data-target="publishers">
+                <span class="toc-number">۵</span>
+                ناشران معتبر بین‌المللی
+            </li>
+            <li class="toc-item" data-target="comprehensive-databases">
+                <span class="toc-number">۶</span>
+                پایگاه‌های جامع کاربردی
+            </li>
+        </ul>
+    </div>
+    
+    <!-- بخش معرفی -->
+    <div class="intro-text" id="intro">
+        <h1><i class="fas fa-graduation-cap"></i> رشته علوم اجتماعی چیست؟</h1>
+        <p><span class="highlight">علوم اجتماعی</span> مجموعه‌ای از رشته‌های علمی است که به مطالعه نظام‌مند رفتار انسان، روابط اجتماعی، نهادها، ساختارها و فرایندهای اجتماعی در سطوح فردی، گروهی و کلان می‌پردازد. هدف اصلی این رشته، <span class="highlight">فهم، تبیین و تحلیل پدیده‌های اجتماعی</span> مانند فرهنگ، قدرت، نابرابری، هویت، تغییرات اجتماعی و تعاملات انسانی است.</p>
+        <p>علوم اجتماعی با بهره‌گیری از نظریه‌ها و روش‌های پژوهشی متنوع (کمی، کیفی و ترکیبی)، تلاش می‌کند الگوها و قوانین حاکم بر زندگی اجتماعی را شناسایی کرده و راهکارهایی برای حل مسائل و چالش‌های اجتماعی ارائه دهد.</p>
+        <p>این رشته نقش مهمی در سیاست‌گذاری عمومی، برنامه‌ریزی اجتماعی و توسعه پایدار ایفا می‌کند.</p>
+        
+        <h3 style="margin-top: 20px; color: var(--primary-dark); font-weight: 600;">زیرشاخه‌های علوم اجتماعی</h3>
+        <p>رشته علوم اجتماعی حوزه‌ای <span class="highlight">میان‌رشته‌ای و گسترده</span> است که زیرشاخه‌ها و گرایش‌های متعددی را در بر می‌گیرد. از مهم‌ترین زیرشاخه‌های موضوعی آن می‌توان به موارد زیر اشاره کرد:</p>
+        
+        <div class="subfields-container" style="margin-top: 15px;">
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="subfield-name">جامعه‌شناسی و مطالعات اجتماعی</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <div class="subfield-name">علوم سیاسی و روابط بین‌الملل</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="subfield-name">اقتصاد، توسعه و سیاست‌گذاری عمومی</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="subfield-name">مطالعات خانواده، جنسیت و جمعیت‌شناسی</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <div class="subfield-name">انسان‌شناسی و مطالعات فرهنگی</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <div class="subfield-name">ارتباطات، رسانه‌ها و افکار عمومی</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div class="subfield-name">حقوق، جرم‌شناسی و عدالت اجتماعی</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-city"></i>
+                </div>
+                <div class="subfield-name">مطالعات شهری، برنامه‌ریزی و رفاه اجتماعی</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-people-arrows"></i>
+                </div>
+                <div class="subfield-name">مطالعات اقلیت‌ها، نژاد و مهاجرت</div>
+            </div>
+            
+            <div class="subfield-item">
+                <div class="subfield-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="subfield-name">مطالعات اعتیاد، سلامت اجتماعی و سیاست‌های اجتماعی</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- کارت‌های اصلی -->
+    <div class="container">
+        <!-- Card 1: پیشینه پژوهش -->
+        <div class="card" id="research-background">
+            <div class="card-header">
+                <h2><i class="fas fa-search"></i> پیشینه پژوهش علوم اجتماعی</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text">در حوزه پژوهش و مطالعات رشته علوم اجتماعی، دسترسی به منابع اطلاعاتی معتبر و پایگاه‌های علمی نقش اساسی در ارتقای کیفیت تحقیقات و به‌ویژه <span class="highlight">پیشینه‌یابی پژوهش</span> دارد.</p>
+                
+                <ul class="link-list">
+                    <li><i class="fas fa-check-circle"></i> شناسایی پیشینه موضوع</li>
+                    <li><i class="fas fa-check-circle"></i> کشف چارچوب‌های نظری</li>
+                    <li><i class="fas fa-check-circle"></i> تحلیل روندهای پژوهشی</li>
+                    <li><i class="fas fa-check-circle"></i> شناسایی خلأهای تحقیقاتی</li>
+                </ul>
+                
+                <p class="card-text">پایگاه‌های استنادی و اطلاعاتی به پژوهشگران کمک می‌کنند تا منابع معتبر را پیدا کرده و کیفیت تحقیقات خود را افزایش دهند.</p>
+            </div>
+        </div>
+        
+        <!-- Card 2: پایگاه‌های چکیده‌نامه‌ای -->
+        <div class="card" id="abstract-databases">
+            <div class="card-header">
+                <h2><i class="fas fa-database"></i> پایگاه‌های چکیده‌نامه‌ای</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text">در سطح بین‌المللی، پایگاه‌های چکیده‌نامه‌ای استنادی معتبر برای پژوهش در علوم اجتماعی وجود دارند که به شناسایی پیشینه تحقیق و روندهای پژوهشی کمک می‌کنند.</p>
+                
+                <ul class="link-list">
+                    <li><i class="fas fa-external-link-alt"></i> <a href="https://yabesh.ir/3680/" target="_blank">Scopus - اسکوپوس</a> <span class="tag">معتبر</span></li>
+                    <li><i class="fas fa-external-link-alt"></i> <a href="https://yabesh.ir/3687" target="_blank">Web of Science - وب آو ساینس</a> <span class="tag">معتبر</span></li>
+                    <li><i class="fas fa-external-link-alt"></i> <a href="https://yabesh.ir/22998" target="_blank">پایگاه‌های چکیده‌نامه‌ای رایگان</a></li>
+                </ul>
+                
+                <p class="card-text">این پایگاه‌ها علاوه بر نمایه‌سازی مجلات علمی معتبر، ابزارهای تحلیلی مهمی برای بررسی استنادات، شناسایی پژوهش‌های کلیدی و ارزیابی تأثیر علمی آثار فراهم می‌کنند.</p>
+                
+                <div class="btn-group">
+                    <a href="https://yabesh.ir/34658/education-ebscohost/" class="btn btn-primary" target="_blank"><i class="fas fa-search"></i> پایگاه ابسکو</a>
+                    <a href="https://yabesh.ir/12660/proquest-dissertations-and-theses/" class="btn btn-secondary" target="_blank"><i class="fas fa-book"></i> پایگاه پروکوئست</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card 3: پایگاه‌های تمام متن -->
+        <div class="card" id="fulltext-databases">
+            <div class="card-header">
+                <h2><i class="fas fa-file-alt"></i> پایگاه‌های تمام متن</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text">برای انجام پژوهش‌های <span class="highlight">تخصصی‌تر در حوزه علوم اجتماعی</span>، استفاده از پایگاه‌ها و پلتفرم‌های موضوعی ضرورت بیشتری پیدا می‌کند.</p>
+                
+                <ul class="link-list">
+                    <li><i class="fas fa-star"></i> <strong>EBSCO</strong> - پایگاه اطلاعاتی ابسکو</li>
+                    <li><i class="fas fa-star"></i> <strong>ProQuest</strong> - پایگاه اطلاعاتی پروکوئست</li>
+                    <li><i class="fas fa-bookmark"></i> Social Science Database Full Text</li>
+                    <li><i class="fas fa-bookmark"></i> Social Sciences Full Text</li>
+                </ul>
+                
+                <p class="card-text">این پایگاه‌ها دسترسی به مجموعه‌ای گسترده از منابع تمام‌متن شامل مقالات علمی، کتاب‌ها، گزارش‌های پژوهشی و پایان‌نامه‌ها را فراهم می‌کنند.</p>
+                
+                <div class="btn-group">
+                    <a href="https://yabesh.ir/product/proquest-central-account/" class="btn btn-primary" target="_blank"><i class="fas fa-user-circle"></i> اکانت پروکوئست</a>
+                    <a href="https://yabesh.ir/request/" class="btn btn-secondary" target="_blank"><i class="fas fa-user-plus"></i> درخواست اکانت</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card 4: ناشران بین‌المللی -->
+        <div class="card" id="publishers">
+            <div class="card-header">
+                <h2><i class="fas fa-globe"></i> ناشران بین‌المللی</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text">ناشران معتبر بین‌المللی نقش بسیار مهمی در تولید و انتشار دانش در حوزه علوم اجتماعی ایفا می‌کنند.</p>
+                
+                <div class="publisher-logos">
+                    <div class="publisher-logo">
+                        <img src="https://yabesh.ir/wp-content/uploads/2023/11/SpringerNature-1.jpg" alt="Springer Nature">
+                    </div>
+                    <div class="publisher-logo">
+                        <img src="https://yabesh.ir/wp-content/uploads/2023/11/Elsevier.png" alt="Elsevier">
+                    </div>
+                </div>
+                
+                <p class="card-text">این ناشران با انتشار مجلات علمی داوری‌شده، کتاب‌های دانشگاهی، کتاب‌های مرجع و مجموعه مقالات، بستر اصلی گردش دانش آکادمیک را فراهم می‌سازند.</p>
+                
+                <div class="btn-group">
+                    <a href="https://yabesh.ir/product/springerlink-direct-account/" class="btn btn-secondary" target="_blank"><i class="fas fa-key"></i> اکانت اشپرینگر</a>
+                    <a href="https://yabesh.ir/product/sciencedirect-direct-account/" class="btn btn-secondary" target="_blank"><i class="fas fa-key"></i> اکانت ساینس دایرکت</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card 5: ناشران تخصصی -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-book-open"></i> ناشران تخصصی</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text">ناشران تخصصی با تمرکز بر نظریه‌های اجتماعی، مطالعات میان‌رشته‌ای و پژوهش‌های کاربردی، منابع ارزشمندی فراهم می‌آورند.</p>
+                
+                <ul class="link-list">
+                    <li><i class="fas fa-university"></i> <strong>Taylor & Francis</strong> - تیلور و فرانسیس</li>
+                    <li><i class="fas fa-university"></i> <strong>Wiley</strong> - انتشارات وایلی</li>
+                    <li><i class="fas fa-university"></i> <strong>SAGE Publications</strong> - انتشارات سیج</li>
+                    <li><i class="fas fa-university"></i> <strong>Oxford University Press</strong> - انتشارات دانشگاه آکسفورد</li>
+                </ul>
+                
+                <div class="btn-group">
+                    <a href="https://yabesh.ir/product/taylor-francis-online/" class="btn btn-primary" target="_blank"><i class="fas fa-sign-in-alt"></i> اکانت تیلور</a>
+                    <a href="https://yabesh.ir/product/online-library-wiley/" class="btn btn-primary" target="_blank"><i class="fas fa-sign-in-alt"></i> اکانت وایلی</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card 6: پایگاه‌های جامع -->
+        <div class="card" id="comprehensive-databases">
+            <div class="card-header">
+                <h2><i class="fas fa-search-plus"></i> پایگاه‌های جامع</h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text">پایگاه‌های جامع و میان‌رشته‌ای می‌توانند منبعی مهم و مکمل برای دانشجویان و پژوهشگران علوم اجتماعی باشند.</p>
+                
+                <ul class="link-list">
+                    <li><i class="fas fa-database"></i> <strong>Academic Search Ultimate</strong></li>
+                    <li><i class="fas fa-database"></i> <strong>EBSCOhost</strong></li>
+                    <li><i class="fas fa-database"></i> <strong>Emerald Insight</strong> <span class="tag">جدید</span></li>
+                    <li><i class="fas fa-database"></i> <strong>IGI Global</strong></li>
+                </ul>
+                
+                <p class="card-text">این پایگاه‌ها شامل <span class="highlight">مجلات و کتاب‌های آکادمیک معتبر</span> هستند و تمرکز اصلی آن‌ها بر پوشش محتوای مجلات علمی داوری‌شده است.</p>
+                
+                <div class="btn-group">
+                    <a href="https://yabesh.ir/product/academic-search-ultimate/" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> اکانت آکادمیک سرچ</a>
+                    <a href="https://yabesh.ir/product/igi-global/" class="btn btn-secondary" target="_blank"><i class="fas fa-download"></i> اکانت آی جی آی</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-note">
+        <p><i class="fas fa-info-circle"></i> تمامی لینک‌ها به منابع خارجی منتهی می‌شوند. برای دسترسی به برخی پایگاه‌ها ممکن است نیاز به اشتراک یا اکانت ویژه باشد.</p>
+        <p>طراحی مدرن با HTML و CSS خالص - سازگار با تمام دستگاه‌ها</p>
+    </div>
+
+    <script>
+        // افزودن انیمیشن به کارت‌ها هنگام اسکرول
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            const tocItems = document.querySelectorAll('.toc-item');
+            const subfieldItems = document.querySelectorAll('.subfield-item');
+            
+            // انیمیشن برای کارت‌ها
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        
+                        // به‌روزرسانی فهرست مطالب
+                        const targetId = entry.target.id;
+                        if (targetId) {
+                            tocItems.forEach(item => {
+                                item.classList.remove('active');
+                                if (item.getAttribute('data-target') === targetId) {
+                                    item.classList.add('active');
+                                }
+                            });
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+            
+            // انیمیشن برای آیتم‌های زیرشاخه‌ها
+            subfieldItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(15px)';
+                item.style.transition = `opacity 0.4s ease ${index * 0.05}s, transform 0.4s ease ${index * 0.05}s`;
+                
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 300);
+            });
+            
+            // افزودن افکت hover به دکمه‌ها
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // قابلیت کلیک روی فهرست مطالب
+            tocItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        // حذف کلاس active از همه آیتم‌ها
+                        tocItems.forEach(i => i.classList.remove('active'));
+                        // اضافه کردن کلاس active به آیتم انتخاب شده
+                        this.classList.add('active');
+                        
+                        // اسکرول نرم به بخش موردنظر
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // تابع برای به‌روزرسانی فعال بودن آیتم‌های فهرست مطالب هنگام اسکرول
+            function updateActiveTocItem() {
+                let currentSection = '';
+                const sections = ['intro', 'research-background', 'abstract-databases', 'fulltext-databases', 'publishers', 'comprehensive-databases'];
+                
+                sections.forEach(section => {
+                    const element = document.getElementById(section);
+                    if (element) {
+                        const rect = element.getBoundingClientRect();
+                        if (rect.top <= 150 && rect.bottom >= 150) {
+                            currentSection = section;
+                        }
+                    }
+                });
+                
+                if (currentSection) {
+                    tocItems.forEach(item => {
+                        item.classList.remove('active');
+                        if (item.getAttribute('data-target') === currentSection) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            }
+            
+            // اضافه کردن رویداد اسکرول
+            window.addEventListener('scroll', updateActiveTocItem);
+            
+            // مقداردهی اولیه
+            updateActiveTocItem();
+            
+            // انیمیشن برای آیتم‌های فهرست مطالب
+            tocItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(20px)';
+                item.style.transition = `opacity 0.3s ease ${index * 0.1}s, transform 0.3s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body>
 </html>
